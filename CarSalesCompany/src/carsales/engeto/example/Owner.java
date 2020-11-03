@@ -21,6 +21,9 @@ public class Owner {
         this.birthDate = birthDate;
     }
 
+    public Owner(String name, String surname, boolean isVip){
+        this(name, surname, "None",isVip,LocalDate.of(1990,01,01));
+    }
     //------------------------------------------
     /*
     * name - jméno
