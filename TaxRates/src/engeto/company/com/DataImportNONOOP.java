@@ -45,7 +45,7 @@ public class DataImportNONOOP {
 
             char importedChar = (char)i;
 
-            if ((importedChar != '\t')&&(importedChar != '\n')){
+            if (importedChar != '\t' && importedChar != '\n'){
 
                 importedValue.append(Character.toString(importedChar));
 

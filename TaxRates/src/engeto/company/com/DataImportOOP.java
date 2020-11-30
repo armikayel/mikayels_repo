@@ -1,9 +1,11 @@
 package engeto.company.com;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataImportOOP {
@@ -14,7 +16,7 @@ public class DataImportOOP {
         this.fileAddress = fileAddress;
     }
 
-    private static String getAttributeName(int attributeOrder){
+    /*private static String getAttributeName(int attributeOrder){
         switch(attributeOrder){
             case 1:
                 return "stateShort";
@@ -29,45 +31,28 @@ public class DataImportOOP {
             default:
                 return "";
         }
-    }
+    }*/
 
-    public ArrayList<Map<String,String>> getImportedList() throws IOException {
+    public List<Map<String, String>> getTaxRatesOfCountries() throws IOException {
 
-        ArrayList<Map<String,String>> importedList = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> taxRatesOfCountries = new ArrayList<>();
 
-        FileReader fileReader = new FileReader(fileAddress);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileAddress))) {
+            while ((bufferedReader.read()) != -1) {
 
-        int i;
-        boolean newLine = true;
-        int attributeOrder = 1;
+                String readLine = bufferedReader.readLine();
+                String[] separatedData = readLine.split("\t");
 
-        Map<String,String> newState = new HashMap<String, String>();
-        StringBuilder importedValue = new StringBuilder();
-
-        while ((i = fileReader.read()) != -1) {
-
-            char importedChar = (char)i;
-
-            if ((importedChar != '\t')&&(importedChar != '\n')){
-
-                importedValue.append(Character.toString(importedChar));
-
-            } else if (importedChar == '\t'){
-
-                newState.put(getAttributeName(attributeOrder), importedValue.toString());
-                importedValue = new StringBuilder();
-                attributeOrder ++;
-
-            } else {
-
-                importedList.add(newState);
-                newState = new HashMap<String, String>();
-                attributeOrder = 1;
-                importedValue = new StringBuilder();
-
+                Map<String, String> newState = new HashMap<String, String>();
+                for(int i = 0; i < separatedData.length; i++){
+                    Attributes attributeName = new Attributes(i+1);
+                    newState.put(attributeName.getAttributeName(), separatedData[i]);
+                }
+                taxRatesOfCountries.add(newState);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        fileReader.close();
-        return importedList;
+        return taxRatesOfCountries;
     }
 }
